@@ -226,7 +226,7 @@ class RandomSampleCrop(object):
         self.sample_options = (
             # using entire original input image
             # None,
-            (None, None)
+            (None, None),
             # sample a patch s.t. MIN jaccard w/ obj in .1,.3,.4,.7,.9
             (0.1, None),
             (0.3, None),
