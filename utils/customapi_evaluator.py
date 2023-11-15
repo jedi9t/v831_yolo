@@ -154,7 +154,8 @@ class CustomAPIEvaluator():
             with open(filename, 'wt') as f:
                 for im_ind, index in enumerate(self.dataset.ids):
                     dets = all_boxes[cls_ind][im_ind]
-                    if dets == []:
+                    #if dets == []:
+                    if dets.size == 0: # Handle the case where dets is empty
                         continue
                     # the VOCdevkit expects 1-based indices
                     for k in range(dets.shape[0]):
