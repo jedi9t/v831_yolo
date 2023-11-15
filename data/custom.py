@@ -19,11 +19,15 @@ else:
 path_to_dir = osp.dirname(osp.abspath(__file__))
 CUSTOM_ROOT = path_to_dir + "/custom"
 
+#CUSTOM_CLASSES = [
+#    "mouse",
+#    "sipeed_logo"
+#]
 CUSTOM_CLASSES = [
-    "mouse",
-    "sipeed_logo"
+    "peop",
+    "bike",
+    "moto"
 ]
-
 
 class CustomAnnotationTransform(object):
     """Transforms a VOC annotation into a Tensor of bbox coords and label index
