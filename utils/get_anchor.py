@@ -154,10 +154,10 @@ def main(args):
         # print(one_file)
         per=ET.parse(one_file)
         p=per.findall('./object/bndbox')
-        x1s = p[0].getchildren()[0].text
-        y1s = p[0].getchildren()[1].text
-        x2s = p[0].getchildren()[2].text
-        y2s = p[0].getchildren()[3].text
+        x1s = list(p[0])[0].text
+        y1s = list(p[0])[1].text
+        x2s = list(p[0])[2].text
+        y2s = list(p[0])[3].text
 
         w = abs(int(x2s) - int(x1s))
         h = abs(int(y2s) - int(y1s))
