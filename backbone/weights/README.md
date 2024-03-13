@@ -13,3 +13,8 @@ password：qgzn
 Also, you can download them from Google Drive:
 
 link: https://drive.google.com/drive/folders/15saMtvYiz3yfFNu5EnC7GSltEAvTImMB?usp=sharing
+
+
+darkent:
+https://share.weiyun.com/9kGDvSUy
+![image](https://github.com/jedi9t/v831_yolo/assets/29448825/1da7021a-e90b-4ae8-8de4-6c547969777d)
