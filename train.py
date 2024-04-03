@@ -110,14 +110,33 @@ def train():
         device = torch.device("cpu")
         print("use cpu")
 
+    # # multi-scale
+    # if args.multi_scale:
+    #     print('use the multi-scale trick ...')
+    #     train_size = [640, 640]        
+    #     val_size = [416, 416]        
+    # else:
+    #     train_size = [416, 416]
+    #     val_size = [416, 416]
+        
+    # 24-3-13 Harling https://chat.openai.com/c/2cd1dc0d-eff9-4235-bf23-869567d61fb3
+    # ChatGPT: 如果你的数据集图片已经统一处理为224x224像素，那么将train_size和val_size参数设置为224x224是合适的。这样做有几个好处：
+    # 减少形变：保持训练和验证时的图像尺寸与预处理后的数据集相同，可以避免因为尺寸调整导致的图像形变，确保模型学习到的特征与目标任务更加相关。
+    # 避免信息丢失：不需要进一步放大或缩小图像，可以避免因调整尺寸而导致的信息丢失或噪声引入。
+    # 提高效率：使用与数据集相匹配的尺寸可以减少不必要的计算，提高训练和验证的效率。
+    # 改善模型表现：当模型的输入尺寸与训练数据一致时，模型能更准确地学习到数据中的特征，这通常会导致更好的模型性能。
+    # 因此，根据你的情况，你应该将train_size和val_size都设置为[224, 224]。这样调整后，模型训练和验证的过程将更加符合你的数据集特征，有助于模型学习和泛化。
+    # 注意，如果你之前采用多尺度训练是出于提高模型对不同尺寸图像的泛化能力的考虑，那么你可能需要评估这种修改对模型性能的影响，以确保模型依然能够有效地处理各种尺寸的图像。不过，如果你的应用场景中图像尺寸相对固定，那么使用与数据集一致的尺寸通常是最佳选择。
+
     # multi-scale
     if args.multi_scale:
         print('use the multi-scale trick ...')
-        train_size = [640, 640]
-        val_size = [416, 416]
+        train_size = [224, 224]        
+        val_size = [224, 224]        
     else:
-        train_size = [416, 416]
-        val_size = [416, 416]
+        train_size = [224, 224]
+        val_size = [224, 224]
+
 
     cfg = train_cfg
     # dataset and evaluator
@@ -275,12 +294,11 @@ def train():
     if args.tfboard:
         print('use tensorboard')
         from torch.utils.tensorboard import SummaryWriter
-        c_time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+        c_time = time.strftime('%Y-%m-%d_%H:%M:%S',time.localtime(time.time()))
         log_path = os.path.join('log/coco/', args.version, c_time)
         os.makedirs(log_path, exist_ok=True)
-
         writer = SummaryWriter(log_path)
-    
+        
     # keep training
     if args.resume is not None:
         print('keep training model: %s' % (args.resume))
@@ -402,7 +420,11 @@ def train():
                 model.eval()
 
                 # evaluate
-                evaluator.evaluate(model)
+                aps = evaluator.evaluate(model)
+                if args.tfboard:
+                    for i, cls in enumerate(evaluator.labelmap):
+                        # viz eval
+                        writer.add_scalar('eval '+cls, aps[i].item(),  epoch * epoch_size)
 
                 # convert to training mode.
                 model.trainable = True
